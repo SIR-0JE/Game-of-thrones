@@ -1,0 +1,67 @@
+import { HOUSE_LINKS } from "./houseLinks";
+
+export const HOUSE_CONFIG = {
+  stark: {
+    name: "House Stark",
+    whatsapp: HOUSE_LINKS.stark,
+    emoji: "🐺",
+    image: "/images/stark (10).jpeg",
+    bannerImage: "/images/stark (10).jpeg",
+    color: "bg-stark text-white border-stark-dark",
+    gradient: "from-slate-300 to-slate-400",
+    hex: "#94A3B8",
+    theme: "snow",
+    accentColor: "slate",
+  },
+  baratheon: {
+    name: "House Baratheon",
+    whatsapp: HOUSE_LINKS.baratheon,
+    emoji: "🦌",
+    image: "/images/House Baratheon Logo PNG Vector (AI) Free Download.jpeg",
+    bannerImage: "/images/House Baratheon Logo PNG Vector (AI) Free Download.jpeg",
+    color: "bg-baratheon text-gray-900 border-baratheon-dark",
+    gradient: "from-amber-300 to-amber-400",
+    hex: "#FBBF24",
+    theme: "lightning",
+    accentColor: "amber",
+  },
+  greyjoy: {
+    name: "House Greyjoy",
+    whatsapp: HOUSE_LINKS.greyjoy,
+    emoji: "🐙",
+    image: "/images/House Greyjoy of Pyke Sigil (1X1 Version) (1).jpeg",
+    bannerImage: "/images/House Greyjoy of Pyke Sigil (1X1 Version) (1).jpeg",
+    color: "bg-greyjoy text-white border-greyjoy-dark",
+    gradient: "from-slate-800 to-slate-900",
+    hex: "#1E293B",
+    theme: "waves",
+    accentColor: "slate",
+  },
+  lannister: {
+    name: "House Lannister",
+    whatsapp: HOUSE_LINKS.lannister,
+    emoji: "🦁",
+    image: "/images/House Lannister.jpeg",
+    bannerImage: "/images/House Lannister.jpeg",
+    color: "bg-lannister text-white border-lannister-dark",
+    gradient: "from-red-600 to-red-700",
+    hex: "#DC2626",
+    theme: "lion",
+    accentColor: "red",
+  },
+  targaryen: {
+    name: "House Targaryen",
+    whatsapp: HOUSE_LINKS.targaryen,
+    emoji: "🐉",
+    image: "/images/House Targaryen.jpeg",
+    bannerImage: "/images/House Targaryen.jpeg",
+    color: "bg-targaryen text-white border-targaryen-dark",
+    gradient: "from-rose-500 to-rose-600",
+    hex: "#F43F5E",
+    theme: "fire",
+    accentColor: "rose",
+  },
+} as const;
+
+export type HouseType = keyof typeof HOUSE_CONFIG;
+

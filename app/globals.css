@@ -1,0 +1,110 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  /* Game of Thrones themed animations */
+  @keyframes flicker {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.8; }
+  }
+  
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+  }
+  
+  @keyframes glow {
+    0%, 100% { box-shadow: 0 0 20px rgba(255, 255, 255, 0.3); }
+    50% { box-shadow: 0 0 30px rgba(255, 255, 255, 0.5); }
+  }
+  
+  @keyframes wave {
+    0%, 100% { transform: translateX(0) rotate(0deg); }
+    25% { transform: translateX(5px) rotate(2deg); }
+    75% { transform: translateX(-5px) rotate(-2deg); }
+  }
+  
+  @keyframes sparkle {
+    0%, 100% { opacity: 0; transform: scale(0); }
+    50% { opacity: 1; transform: scale(1); }
+  }
+  
+  .animate-flicker {
+    animation: flicker 2s ease-in-out infinite;
+  }
+  
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+  
+  .animate-glow {
+    animation: glow 2s ease-in-out infinite;
+  }
+  
+  .animate-wave {
+    animation: wave 4s ease-in-out infinite;
+  }
+  
+  .animate-sparkle {
+    animation: sparkle 2s ease-in-out infinite;
+  }
+  
+  /* Medieval themed text effects */
+  .text-medieval {
+    font-family: 'Georgia', 'Times New Roman', serif;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    letter-spacing: 0.05em;
+  }
+  
+  /* House-specific theming */
+  .house-stark-theme {
+    background: linear-gradient(135deg, rgba(148, 163, 184, 0.1) 0%, rgba(100, 116, 139, 0.2) 100%);
+  }
+  
+  .house-baratheon-theme {
+    background: linear-gradient(135deg, rgba(251, 191, 36, 0.1) 0%, rgba(245, 158, 11, 0.2) 100%);
+  }
+  
+  .house-greyjoy-theme {
+    background: linear-gradient(135deg, rgba(30, 41, 59, 0.2) 0%, rgba(15, 23, 42, 0.3) 100%);
+  }
+  
+  .house-lannister-theme {
+    background: linear-gradient(135deg, rgba(220, 38, 38, 0.1) 0%, rgba(185, 28, 28, 0.2) 100%);
+  }
+  
+  .house-targaryen-theme {
+    background: linear-gradient(135deg, rgba(244, 63, 94, 0.1) 0%, rgba(225, 29, 72, 0.2) 100%);
+  }
+  
+  /* Parchment effect */
+  .parchment {
+    background: linear-gradient(
+      135deg,
+      rgba(248, 245, 237, 0.95) 0%,
+      rgba(241, 236, 220, 0.95) 100%
+    );
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3),
+                inset 0 0 100px rgba(139, 90, 43, 0.1);
+  }
+  
+  /* Shield border effect */
+  .shield-border {
+    border: 4px solid;
+    border-image: linear-gradient(135deg, rgba(184, 134, 11, 0.8), rgba(139, 90, 43, 0.8)) 1;
+    position: relative;
+  }
+  
+  .shield-border::before {
+    content: '';
+    position: absolute;
+    top: -4px;
+    left: -4px;
+    right: -4px;
+    bottom: -4px;
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(184, 134, 11, 0.2));
+    z-index: -1;
+    border-radius: inherit;
+  }
+}

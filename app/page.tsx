@@ -35,6 +35,8 @@ export default function Home() {
     matricNumber: "",
   });
   const [registered, setRegistered] = useState(false);
+  const [registrationOpen, setRegistrationOpen] = useState<boolean | null>(null);
+  const [closedMessage, setClosedMessage] = useState<string>("");
   const selectedDepartmentCode = formData.department
     ? getDepartmentCode(formData.department)
     : undefined;
@@ -47,6 +49,19 @@ export default function Home() {
     if (typeof window !== 'undefined' && localStorage.getItem('registered_once')) {
       setRegistered(true);
     }
+
+    // Check registration status
+    fetch("/api/registration-status")
+      .then((res) => res.json())
+      .then((data) => {
+        setRegistrationOpen(data.open);
+        setClosedMessage(data.message);
+      })
+      .catch((err) => {
+        console.error("Failed to check registration status:", err);
+        // Default to open if check fails
+        setRegistrationOpen(true);
+      });
   }, []);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -81,6 +96,55 @@ export default function Home() {
       setLoading(false);
     }
   };
+
+  // Show loading state while checking registration status
+  if (registrationOpen === null) {
+    return (
+      <main className="min-h-screen flex items-center justify-center">
+        <div className="bg-amber-50/90 border-4 border-amber-800/50 rounded-2xl p-8 shadow-2xl text-center max-w-md mx-auto">
+          <div className="flex items-center justify-center">
+            <svg
+              className="animate-spin h-8 w-8 text-amber-600"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                className="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                strokeWidth="4"
+              />
+              <path
+                className="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+              />
+            </svg>
+          </div>
+        </div>
+      </main>
+    );
+  }
+
+  // Show registration closed message
+  if (registrationOpen === false) {
+    return (
+      <main className="min-h-screen flex items-center justify-center p-4">
+        <div className="bg-red-50/90 border-4 border-red-800/50 rounded-2xl p-8 shadow-2xl text-center max-w-md mx-auto">
+          <div className="mb-6">
+            <span className="text-6xl">🔒</span>
+          </div>
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">Registration Closed</h2>
+          <p className="text-gray-700 mb-4 text-lg">{closedMessage || "Registration is currently closed. Please contact the Sports Director for more information."}</p>
+          <div className="mt-6 pt-6 border-t border-red-800/20">
+            <p className="text-sm text-gray-600">If you have any questions, please reach out to the Sports Director.</p>
+          </div>
+        </div>
+      </main>
+    );
+  }
 
   if (registered) {
     return (

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import connectDB from "@/lib/mongodb";
 import Student from "@/models/Student";
 import { assignHouse } from "@/lib/houseAssignment";
+import { REGISTRATION_CONFIG } from "@/config/registration";
 
 const DEPARTMENT_CODE_MAP: Record<string, string> = {
   "computer science": "CSC",
@@ -65,6 +66,14 @@ async function checkExistingMatricNumber(matricNumber: string): Promise<boolean>
 }
 
 export async function POST(request: NextRequest) {
+  // Check if registration is locked
+  if (!REGISTRATION_CONFIG.REGISTRATION_OPEN) {
+    return NextResponse.json(
+      { error: REGISTRATION_CONFIG.CLOSED_MESSAGE },
+      { status: 403 }
+    );
+  }
+
   let safeName = "";
   let safeLevel = "";
   let safeDepartment = "";

@@ -25,3 +25,41 @@ export async function GET(request: NextRequest) {
   }
 }
 
+export async function DELETE(request: NextRequest) {
+  const authError = requireAdmin(request);
+  if (authError) return authError;
+
+  try {
+    const { id } = await request.json();
+
+    if (!id) {
+      return NextResponse.json(
+        { error: "Student ID is required" },
+        { status: 400 }
+      );
+    }
+
+    await connectDB();
+
+    const deletedStudent = await Student.findByIdAndDelete(id).lean();
+
+    if (!deletedStudent) {
+      return NextResponse.json(
+        { error: "Student not found" },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json({
+      success: true,
+      deletedStudent,
+    });
+  } catch (error) {
+    console.error("Error deleting student:", error);
+    return NextResponse.json(
+      { error: "Failed to delete student" },
+      { status: 500 }
+    );
+  }
+}
+

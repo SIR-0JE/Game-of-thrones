@@ -45,6 +45,7 @@ export default function AdminPage() {
 
   // Mobile sidebar state
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -124,6 +125,69 @@ export default function AdminPage() {
       document.body.removeChild(a);
     } catch (err) {
       setError("Failed to export CSV");
+    }
+  };
+
+  const handleDeleteStudent = async (studentId: string) => {
+    if (!password) {
+      setError("Admin password missing. Please reauthenticate to continue.");
+      return;
+    }
+
+    const confirmed = window.confirm(
+      "Are you sure you want to remove this member? This action cannot be undone."
+    );
+    if (!confirmed) return;
+
+    setDeletingId(studentId);
+    setError(null);
+
+    try {
+      const response = await fetch(
+        `/api/admin/students?password=${encodeURIComponent(password)}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ id: studentId }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to delete student");
+      }
+
+      const deletedStudent = data.deletedStudent as Student | undefined;
+
+      setStudents((prev) => prev.filter((s) => s._id !== studentId));
+      if (deletedStudent) {
+        setStats((prev) => {
+          if (!prev) return prev;
+          const houseKey = deletedStudent.house;
+          const updatedHouseCount = Math.max(
+            (prev.houses[houseKey] || 0) - 1,
+            0
+          );
+          return {
+            ...prev,
+            total: Math.max(prev.total - 1, 0),
+            houses: {
+              ...prev.houses,
+              [houseKey]: updatedHouseCount,
+            },
+          };
+        });
+      }
+    } catch (err) {
+      console.error("Delete student failed:", err);
+      setError(
+        err instanceof Error ? err.message : "Failed to delete student"
+      );
+    } finally {
+      setDeletingId(null);
     }
   };
 
@@ -664,12 +728,15 @@ export default function AdminPage() {
                               </div>
                             </th>
                           ))}
+                          <th className="px-4 py-4 text-right text-sm font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">
+                            Actions
+                          </th>
                         </tr>
                       </thead>
                       <tbody className="bg-white divide-y divide-gray-200">
                         {filteredStudents.length === 0 ? (
                           <tr>
-                            <td colSpan={6} className="px-4 py-12 text-center text-gray-500 text-base">
+                            <td colSpan={7} className="px-4 py-12 text-center text-gray-500 text-base">
                               <div className="flex flex-col items-center gap-3">
                                 <svg className="w-12 h-12 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -719,6 +786,27 @@ export default function AdminPage() {
                               </td>
                               <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-600">
                                 {new Date(student.createdAt).toLocaleDateString()}
+                              </td>
+                              <td className="px-4 py-4 text-right whitespace-nowrap">
+                                <button
+                                  onClick={() => handleDeleteStudent(student._id)}
+                                  disabled={deletingId === student._id}
+                                  className="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded-lg bg-red-600 text-white hover:bg-red-700 transition-all shadow disabled:opacity-50 disabled:cursor-not-allowed"
+                                >
+                                  {deletingId === student._id ? (
+                                    <>
+                                      <span className="w-4 h-4 border-2 border-white/50 border-t-white rounded-full animate-spin" />
+                                      Removing...
+                                    </>
+                                  ) : (
+                                    <>
+                                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                      </svg>
+                                      Delete
+                                    </>
+                                  )}
+                                </button>
                               </td>
                             </tr>
                           ))

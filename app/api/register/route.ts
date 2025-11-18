@@ -3,24 +3,50 @@ import connectDB from "@/lib/mongodb";
 import Student from "@/models/Student";
 import { assignHouse } from "@/lib/houseAssignment";
 
+const DEPARTMENT_CODE_MAP: Record<string, string> = {
+  "computer science": "CSC",
+  "cyber security": "CYB",
+  "information technology": "IFT",
+  "software engineering": "SEN",
+  "mass communication": "MAS",
+};
+
+function getDepartmentCode(department: string): string | undefined {
+  return DEPARTMENT_CODE_MAP[department.trim().toLowerCase()];
+}
+
 // ADD THIS VALIDATION FUNCTION
-function validateMatricNumber(level: string, matricNumber?: string): string | null {
+function validateMatricNumber(
+  level: string,
+  department: string,
+  matricNumber?: string
+): string | null {
+  const trimmedLevel = typeof level === "string" ? level.trim() : "";
+  const trimmedDepartment = typeof department === "string" ? department.trim() : "";
+  const normalizedMatric = matricNumber?.trim() ?? "";
+  const departmentCode = trimmedDepartment ? getDepartmentCode(trimmedDepartment) : undefined;
+
   // For level 100, matric number is optional
-  if (level === "100" && (!matricNumber || matricNumber.trim() === "")) {
+  if (trimmedLevel === "100" && normalizedMatric === "") {
     return null; // No error
   }
 
   // For levels above 100, matric number is required
-  if (level !== "100" && (!matricNumber || matricNumber.trim() === "")) {
-    return "Matric number is required for levels above 100";
+  if (trimmedLevel !== "100" && normalizedMatric === "") {
+    return "Matric number is required";
   }
 
-  // If matric number is provided, validate format
-  if (matricNumber && matricNumber.trim() !== "") {
-    const matricRegex = /^BU\d{2}[A-Z]{3,4}\d{4}$/;
-    if (!matricRegex.test(matricNumber)) {
-      return "Invalid matric number format. Example: BU22CSC1068";
-    }
+  if (normalizedMatric === "") {
+    return null;
+  }
+
+  if (!departmentCode) {
+    return "Invalid department selected";
+  }
+
+  const matricRegex = new RegExp(`^BU\\d{2}${departmentCode}\\d{4}$`);
+  if (!matricRegex.test(normalizedMatric.toUpperCase())) {
+    return `Invalid matric number format. Example: BU22${departmentCode}1068`;
   }
 
   return null; // No error
@@ -30,8 +56,9 @@ function validateMatricNumber(level: string, matricNumber?: string): string | nu
 async function checkExistingMatricNumber(matricNumber: string): Promise<boolean> {
   if (!matricNumber || matricNumber.trim() === "") return false;
   
+  const formattedMatricNumber = matricNumber.trim().toUpperCase();
   const existingStudent = await Student.findOne({
-    matricNumber: matricNumber.trim()
+    matricNumber: formattedMatricNumber
   });
   
   return !!existingStudent;
@@ -60,7 +87,14 @@ export async function POST(request: NextRequest) {
     }
 
     // ADD MATRIC NUMBER VALIDATION
-    const matricValidationError = validateMatricNumber(safeLevel, matricNumber);
+    const normalizedMatricNumber =
+      typeof matricNumber === "string" ? matricNumber.trim().toUpperCase() : "";
+
+    const matricValidationError = validateMatricNumber(
+      safeLevel,
+      safeDepartment,
+      normalizedMatricNumber || undefined
+    );
     if (matricValidationError) {
       return NextResponse.json(
         { error: matricValidationError },
@@ -69,8 +103,8 @@ export async function POST(request: NextRequest) {
     }
 
     // ADD DUPLICATE MATRIC NUMBER CHECK (only if matric number is provided)
-    if (matricNumber && matricNumber.trim() !== "") {
-      const matricExists = await checkExistingMatricNumber(matricNumber);
+    if (normalizedMatricNumber !== "") {
+      const matricExists = await checkExistingMatricNumber(normalizedMatricNumber);
       if (matricExists) {
         return NextResponse.json(
           { error: "Matric number already exists" },
@@ -102,7 +136,7 @@ export async function POST(request: NextRequest) {
       department: safeDepartment.trim(),
       house,
       // UPDATE THIS: Only set matricNumber if provided and not empty
-      matricNumber: matricNumber && typeof matricNumber === "string" ? matricNumber.trim() : null,
+      matricNumber: normalizedMatricNumber !== "" ? normalizedMatricNumber : null,
     };
 
     const student = await Student.create(studentData);

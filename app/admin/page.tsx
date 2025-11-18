@@ -412,145 +412,146 @@ export default function AdminPage() {
               {activeTab === "overview" && stats && (
                 <div className="space-y-6">
                   {/* Stats Cards */}
-                 // In the overview section, replace the Stats Cards section with this:
-
-{/* Stats Cards */}
-<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-7 gap-4">
-  <div className="bg-gradient-to-br from-blue-600 to-blue-700 text-white p-6 rounded-2xl shadow-lg col-span-1 sm:col-span-2 lg:col-span-1">
-    <div className="text-3xl lg:text-4xl font-bold mb-2">{stats.total}</div>
-    <div className="text-sm lg:text-base font-semibold opacity-90">Total Students</div>
-  </div>
-  {Object.entries(HOUSE_CONFIG).map(([key, config]) => {
-    // Determine text color based on house for better contrast
-    const isDarkHouse = ["greyjoy", "lannister", "targaryen"].includes(key);
-    const textColor = isDarkHouse ? "text-white" : "text-gray-900";
-    const subTextColor = isDarkHouse ? "text-white/90" : "text-gray-700";
-    
-    return (
-      <div
-        key={key}
-        className={`bg-gradient-to-br ${config.gradient} ${textColor} p-4 lg:p-6 rounded-2xl shadow-lg border-2 border-white/30`}
-      >
-        <div className="flex items-center gap-3 mb-2">
-          <img 
-            src={config.image} 
-            alt={config.name} 
-            className="w-8 h-8 lg:w-10 lg:h-10 rounded-full border-2 border-white/50 shadow-sm bg-white object-cover" 
-          />
-          <div className="text-lg lg:text-2xl font-bold">
-            {stats.houses[key as HouseType] || 0}
-          </div>
-        </div>
-        <div className={`text-xs lg:text-sm font-semibold ${subTextColor} opacity-90 truncate`}>
-          {config.name}
-        </div>
-      </div>
-    );
-  })}
-</div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-7 gap-4">
+                    <div className="bg-gradient-to-br from-blue-600 to-blue-700 text-white p-6 rounded-2xl shadow-lg col-span-1 sm:col-span-2 lg:col-span-1">
+                      <div className="text-3xl lg:text-4xl font-bold mb-2">{stats.total}</div>
+                      <div className="text-sm lg:text-base font-semibold opacity-90">Total Students</div>
+                    </div>
+                    {Object.entries(HOUSE_CONFIG).map(([key, config]) => {
+                      // Determine text color based on house for better contrast
+                      const isDarkHouse = ["greyjoy", "lannister", "targaryen"].includes(key);
+                      const textColor = isDarkHouse ? "text-white" : "text-gray-900";
+                      const subTextColor = isDarkHouse ? "text-white/90" : "text-gray-700";
+                      
+                      return (
+                        <div
+                          key={key}
+                          className={`bg-gradient-to-br ${config.gradient} ${textColor} p-4 lg:p-6 rounded-2xl shadow-lg border-2 border-white/30`}
+                        >
+                          <div className="flex items-center gap-3 mb-2">
+                            <img 
+                              src={config.image} 
+                              alt={config.name} 
+                              className="w-8 h-8 lg:w-10 lg:h-10 rounded-full border-2 border-white/50 shadow-sm bg-white object-cover" 
+                            />
+                            <div className="text-lg lg:text-2xl font-bold">
+                              {stats.houses[key as HouseType] || 0}
+                            </div>
+                          </div>
+                          <div className={`text-xs lg:text-sm font-semibold ${subTextColor} opacity-90 truncate`}>
+                            {config.name}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
 
                   {/* Charts */}
                   <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-                   {/* Bar Chart */}
-<div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg p-6 border border-white/20">
-  <h3 className="text-xl font-bold text-gray-800 mb-6">Distribution by House</h3>
-  <div className="space-y-4">
-    {chartData?.map((item) => (
-      <div key={item.house}>
-        <div className="flex items-center justify-between mb-2">
-          <div className="flex items-center gap-3">
-            <span className="text-xl">{item.emoji}</span>
-            <span className="font-semibold text-gray-700 text-sm lg:text-base">{item.name}</span>
-          </div>
-          <span className="font-bold text-gray-800 text-sm lg:text-base">{item.count}</span>
-        </div>
-        <div className="w-full bg-gray-200 rounded-full h-4 lg:h-6 overflow-hidden">
-          <div
-            className="h-full rounded-full transition-all duration-500 flex items-center justify-end pr-2"
-            style={{
-              width: `${item.barWidth}%`,
-              background: `linear-gradient(to right, ${item.color}, ${item.color}dd)`,
-            }}
-          >
-            {item.barWidth > 20 && (
-              <span className="text-xs font-semibold text-white">
-                {item.percentage.toFixed(1)}%
-              </span>
-            )}
-          </div>
-        </div>
-      </div>
-    ))}
-  </div>
-</div>
+                    {/* Bar Chart */}
+                    <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg p-6 border border-white/20">
+                      <h3 className="text-xl font-bold text-gray-800 mb-6">Distribution by House</h3>
+                      <div className="space-y-4">
+                        {chartData?.map((item) => (
+                          <div key={item.house}>
+                            <div className="flex items-center justify-between mb-2">
+                              <div className="flex items-center gap-3">
+                                <span className="text-xl">{item.emoji}</span>
+                                <span className="font-semibold text-gray-700 text-sm lg:text-base">{item.name}</span>
+                              </div>
+                              <span className="font-bold text-gray-800 text-sm lg:text-base">{item.count}</span>
+                            </div>
+                            <div className="w-full bg-gray-200 rounded-full h-4 lg:h-6 overflow-hidden">
+                              <div
+                                className="h-full rounded-full transition-all duration-500 flex items-center justify-end pr-2"
+                                style={{
+                                  width: `${item.barWidth}%`,
+                                  background: `linear-gradient(to right, ${item.color}, ${item.color}dd)`,
+                                }}
+                              >
+                                {item.barWidth > 20 && (
+                                  <span className="text-xs font-semibold text-white">
+                                    {item.percentage.toFixed(1)}%
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
 
-{/* Pie Chart */}
-<div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg p-6 border border-white/20">
-  <h3 className="text-xl font-bold text-gray-800 mb-6">House Allocation</h3>
-  <div className="flex flex-col lg:flex-row items-center gap-6">
-    <div className="relative w-48 h-48 lg:w-56 lg:h-56 flex-shrink-0">
-      <svg viewBox="0 0 200 200" className="w-full h-full">
-        {chartData && (() => {
-          let currentAngle = -90;
-          const total = chartData.reduce((sum, item) => sum + item.count, 0);
-          
-          return chartData.map((item, index) => {
-            const percentage = total > 0 ? (item.count / total) * 100 : 0;
-            const angle = (percentage / 100) * 360;
-            const startAngle = currentAngle;
-            const endAngle = currentAngle + angle;
-            
-            const x1 = 100 + 80 * Math.cos((startAngle * Math.PI) / 180);
-            const y1 = 100 + 80 * Math.sin((startAngle * Math.PI) / 180);
-            const x2 = 100 + 80 * Math.cos((endAngle * Math.PI) / 180);
-            const y2 = 100 + 80 * Math.sin((endAngle * Math.PI) / 180);
-            
-            const largeArc = angle > 180 ? 1 : 0;
-            
-            const pathData = [
-              `M 100 100`,
-              `L ${x1} ${y1}`,
-              `A 80 80 0 ${largeArc} 1 ${x2} ${y2}`,
-              `Z`,
-            ].join(" ");
-            
-            currentAngle += angle;
-            
-            return (
-              <path
-                key={item.house}
-                d={pathData}
-                fill={item.color}
-                stroke="white"
-                strokeWidth="3"
-              />
-            );
-          });
-        })()}
-      </svg>
-      <div className="absolute inset-0 flex items-center justify-center">
-        <div className="text-center">
-          <div className="text-2xl lg:text-3xl font-bold text-gray-800">{stats.total}</div>
-          <div className="text-sm text-gray-600">Total</div>
-        </div>
-      </div>
-    </div>
-    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 flex-1">
-      {chartData?.map((item) => (
-        <div key={item.house} className="flex items-center gap-3 p-3 rounded-lg bg-gray-50 border border-gray-200">
-          <div
-            className="w-4 h-4 rounded flex-shrink-0"
-            style={{ backgroundColor: item.color }}
-          />
-          <div className="flex-1 min-w-0">
-            <div className="text-sm font-semibold text-gray-800 truncate">{item.name}</div>
-            <div className="text-xs text-gray-600">{item.count} students</div>
-          </div>
-        </div>
-      ))}
-    </div>
-  </div>
-</div>
+                    {/* Pie Chart */}
+                    <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg p-6 border border-white/20">
+                      <h3 className="text-xl font-bold text-gray-800 mb-6">House Allocation</h3>
+                      <div className="flex flex-col lg:flex-row items-center gap-6">
+                        <div className="relative w-48 h-48 lg:w-56 lg:h-56 flex-shrink-0">
+                          <svg viewBox="0 0 200 200" className="w-full h-full">
+                            {chartData && (() => {
+                              let currentAngle = -90;
+                              const total = chartData.reduce((sum, item) => sum + item.count, 0);
+                              
+                              return chartData.map((item, index) => {
+                                const percentage = total > 0 ? (item.count / total) * 100 : 0;
+                                const angle = (percentage / 100) * 360;
+                                const startAngle = currentAngle;
+                                const endAngle = currentAngle + angle;
+                                
+                                const x1 = 100 + 80 * Math.cos((startAngle * Math.PI) / 180);
+                                const y1 = 100 + 80 * Math.sin((startAngle * Math.PI) / 180);
+                                const x2 = 100 + 80 * Math.cos((endAngle * Math.PI) / 180);
+                                const y2 = 100 + 80 * Math.sin((endAngle * Math.PI) / 180);
+                                
+                                const largeArc = angle > 180 ? 1 : 0;
+                                
+                                const pathData = [
+                                  `M 100 100`,
+                                  `L ${x1} ${y1}`,
+                                  `A 80 80 0 ${largeArc} 1 ${x2} ${y2}`,
+                                  `Z`,
+                                ].join(" ");
+                                
+                                currentAngle += angle;
+                                
+                                return (
+                                  <path
+                                    key={item.house}
+                                    d={pathData}
+                                    fill={item.color}
+                                    stroke="white"
+                                    strokeWidth="3"
+                                  />
+                                );
+                              });
+                            })()}
+                          </svg>
+                          <div className="absolute inset-0 flex items-center justify-center">
+                            <div className="text-center">
+                              <div className="text-2xl lg:text-3xl font-bold text-gray-800">{stats.total}</div>
+                              <div className="text-sm text-gray-600">Total</div>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 flex-1">
+                          {chartData?.map((item) => (
+                            <div key={item.house} className="flex items-center gap-3 p-3 rounded-lg bg-gray-50 border border-gray-200">
+                              <div
+                                className="w-4 h-4 rounded flex-shrink-0"
+                                style={{ backgroundColor: item.color }}
+                              />
+                              <div className="flex-1 min-w-0">
+                                <div className="text-sm font-semibold text-gray-800 truncate">{item.name}</div>
+                                <div className="text-xs text-gray-600">{item.count} students</div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               {activeTab === "students" && (
                 <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-2xl overflow-hidden border border-white/20">
                   {/* Filters and Search */}

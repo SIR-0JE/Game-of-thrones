@@ -12,7 +12,7 @@ A Next.js 14 application for randomly assigning students to houses for a school 
 
 ## ✨ Features
 
-- **Student Registration**: Register students with name, matric number, level, and department
+- **Student Registration**: Register students with name, level, and department
 - **Balanced Randomization**: Automatically assigns students to houses ensuring equal distribution
 - **Duplicate Prevention**: Prevents duplicate registrations for the same student
 - **WhatsApp Integration**: Each house has a WhatsApp group link for students to join
@@ -27,14 +27,6 @@ A Next.js 14 application for randomly assigning students to houses for a school 
 - **Tailwind CSS**
 - **MongoDB** (Mongoose)
 - **Server Actions & API Routes**
-
-## 📜 Scripts
-
-- `npm run dev`: Starts the development server.
-- `npm run build`: Builds the application for production.
-- `npm run start`: Starts the production server.
-- `npm run migrate`: Sets up database indexes and schema validation.
-- `npm run add-matric`: Migration script to add `matricNumber` field to existing student records.
 
 ## 📋 Prerequisites
 
@@ -82,14 +74,6 @@ export const HOUSE_CONFIG = {
 
 ```bash
 npm run dev
-```
-
-### 5. Database Migration
-
-Run the migration script to set up indexes:
-
-```bash
-npm run migrate
 ```
 
 Open [http://localhost:3000](http://localhost:3000) in your browser.
@@ -178,7 +162,6 @@ Register a new student.
 ```json
 {
   "name": "John Doe",
-  "matricNumber": "BU22CSC1068",
   "level": "200",
   "department": "Computer Science"
 }
@@ -191,7 +174,6 @@ Register a new student.
   "student": {
     "_id": "...",
     "name": "John Doe",
-    "matricNumber": "BU22CSC1068",
     "level": "200",
     "department": "Computer Science",
     "house": "stark",
